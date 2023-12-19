@@ -5,26 +5,20 @@ import java.util.List;
 
 public class WestminsterShoppingManager implements ShoppingManager {
     private List<Product> productList = new ArrayList<>();
-    public static WestminsterShoppingManager uowShoppingManager = new WestminsterShoppingManager();
 
-    private WestminsterShoppingManager() {}
+    private static final int MAX_PRODUCT = 50;
+//    public static WestminsterShoppingManager uowShoppingManager = new WestminsterShoppingManager();
 
-    public void menu(){
-        System.out.println("----- Welcome to Westminster Shopping Centre -----");
-        System.out.println("Please select a number below:");
-        System.out.println("1. Add a product");
-        System.out.println("2. Delete a product");
-        System.out.println("3. Display all the products");
-        System.out.println("4. Save the file");
-        System.out.println("5. To exit");
-    }
+//    private WestminsterShoppingManager() {}
 
-    public static WestminsterShoppingManager getUowShoppingManager() {
-        return uowShoppingManager;
-    }
+//    public static WestminsterShoppingManager getUowShoppingManager() {
+//        return uowShoppingManager;
+//    }
 
     @Override
     public void addProduct(Product product) {
+        productList.add(product);
+
 
     }
 
@@ -35,7 +29,9 @@ public class WestminsterShoppingManager implements ShoppingManager {
 
     @Override
     public void printAllProducts() {
-
+        for (Product product : productList){
+            System.out.println(product.toString());
+        }
     }
 
     @Override
@@ -48,5 +44,15 @@ public class WestminsterShoppingManager implements ShoppingManager {
         return "WestminsterShoppingManager{" +
                 "productList=" + productList +
                 '}';
+    }
+
+    public void menu(){
+        System.out.println("----- Welcome to Westminster Shopping Centre -----");
+        System.out.println("Please select a number below:");
+        System.out.println("1. Add a product");
+        System.out.println("2. Delete a product");
+        System.out.println("3. Display all the products");
+        System.out.println("4. Save the file");
+        System.out.println("5. To exit");
     }
 }

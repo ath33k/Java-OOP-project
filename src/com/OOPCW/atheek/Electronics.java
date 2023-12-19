@@ -4,9 +4,9 @@ import java.util.Date;
 
 public class Electronics extends Product{
     private String brand;
-    private Date warrantyPeriod;
+    private int warrantyPeriod;
 
-    public Electronics(String productID, String productName, int noOfItems, double price, String brand, Date warrantyPeriod) {
+    public Electronics(String productID, String productName, int noOfItems, double price, String brand, int warrantyPeriod) {
         super(productID, productName, noOfItems, price);
         this.brand = brand;
         this.warrantyPeriod = warrantyPeriod;
@@ -20,23 +20,19 @@ public class Electronics extends Product{
         this.brand = brand;
     }
 
-    public Date getWarrantyPeriod() {
+    public int getWarrantyPeriod() {
         return warrantyPeriod;
     }
 
-    public void setWarrantyPeriod(Date warrantyPeriod) {
+    public void setWarrantyPeriod(int warrantyPeriod) {
         this.warrantyPeriod = warrantyPeriod;
     }
 
     @Override
     public String toString() {
-        return "com.OOPCW.atheek.Electronics{" +
+        return super.toString() +
                 "brand='" + brand + '\'' +
                 ", warrantyPeriod=" + warrantyPeriod +
-                ", productID='" + productID + '\'' +
-                ", productName='" + productName + '\'' +
-                ", noOfItems=" + noOfItems +
-                ", price=" + price +
-                '}';
+                " }";
     }
 }

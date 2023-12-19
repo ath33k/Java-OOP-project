@@ -30,13 +30,9 @@ public class Clothing extends Product {
 
     @Override
     public String toString() {
-        return "com.OOPCW.atheek.Clothing{" +
+        return  super.toString() +
                 "size='" + size + '\'' +
                 ", colour=" + colour +
-                ", productID='" + productID + '\'' +
-                ", productName='" + productName + '\'' +
-                ", noOfItems=" + noOfItems +
-                ", price=" + price +
-                '}';
+                " }";
     }
 }

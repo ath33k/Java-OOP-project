@@ -6,7 +6,7 @@ public class Product {
     protected int noOfItems;
     protected double price;
 
-    public Product(String productID, String productName, int noOfItems, double price) {
+    protected Product(String productID, String productName, int noOfItems, double price) {
         this.productID = productID;
         this.productName = productName;
         this.noOfItems = noOfItems;
@@ -46,13 +46,11 @@ public class Product {
         this.price = price;
     }
 
-//    @Override
-//    public String toString() {
-//        return "com.OOPCW.atheek.Product{" +
-//                "productID='" + productID + '\'' +
-//                ", productName='" + productName + '\'' +
-//                ", noOfItems=" + noOfItems +
-//                ", price=" + price +
-//                '}';
-//    }
+    @Override
+    public String toString() {
+        return "{ productID='" + productID + '\'' +
+                ", productName='" + productName + '\'' +
+                ", noOfItems=" + noOfItems +
+                ", price=" + price + ", ";
+    }
 }
