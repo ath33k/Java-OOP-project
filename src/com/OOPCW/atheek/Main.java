@@ -2,6 +2,8 @@ package com.OOPCW.atheek;
 
 import java.awt.*;
 import java.util.Scanner;
+import java.util.regex.Pattern;
+
 
 public class Main {
     static Scanner sc = new Scanner(System.in);
@@ -15,15 +17,13 @@ public class Main {
 
                 switch (mainMenuChoice){
                     case 1:
-                        System.out.println("Enter '1' to add electronics OR Enter '2' to add Clothing");
-                        int nestedChoice = validateIntegers(">>> ");
+//                        System.out.println("Enter '1' to add electronics OR Enter '2' to add Clothing");
+                        int nestedChoice = validateIntegers("Enter '1' to add electronics OR Enter '2' to add Clothing \n>>> ");
                         sc.nextLine();
                         if (nestedChoice == 1){
-                            Product result = addElectronics();
-                            uowShoppingManager.addProduct(result);
+                            uowShoppingManager.addProduct(addElectronics());
                         }else if (nestedChoice == 2){
-                            Product result = addClothing();
-                            uowShoppingManager.addProduct(result);
+                            uowShoppingManager.addProduct(addClothing());
                         }else {
                             System.out.println("Unknown operation");
                         }
@@ -36,6 +36,9 @@ public class Main {
                         break;
                     case 5:
                         break label;
+                    default:
+                        System.out.println("Invalid Input");
+                        break;
                 }
 //                System.out.println("Press any number to navigate main menu Or enter '999' to exit : ");
                 int extChoice = validateIntegers("Press any number to navigate main menu Or enter '999' to exit : ");
@@ -51,10 +54,10 @@ public class Main {
     }
 
     public static Clothing addClothing(){
-        System.out.println("Enter Product ID : ");
-        String productID = sc.nextLine();
-        System.out.println("Enter Product name : ");
-        String productName = sc.nextLine();
+//        System.out.println("Enter Product ID : ");
+        String productID = stringValidation("Enter Product ID : ");
+//        System.out.println("Enter Product name : ");
+        String productName = stringValidation("Enter Product name : ");
 //        System.out.println("Enter the No of Items : ");
         int noOfItems = validateIntegers("Enter the No of Items : ");
 //        System.out.println("Enter the price : ");
@@ -75,10 +78,10 @@ public class Main {
     }
 
     public static Electronics addElectronics(){
-        System.out.println("Enter Product ID : ");
-        String productID = sc.nextLine();
-        System.out.println("Enter Product name : ");
-        String productName = sc.nextLine();
+//        System.out.println("Enter Product ID : ");
+        String productID = stringValidation("Enter Product ID : ");
+//        System.out.println("Enter Product name : ");
+        String productName = stringValidation("Enter Product name : ");
 //        System.out.println("Enter the No of Items : ");
         int noOfItems = validateIntegers("Enter the No of Items : ");
 //        System.out.println("Enter the price : ");
@@ -96,6 +99,8 @@ public class Main {
 
     }
 
+
+    /** Input Validators including (int, double, String)*/
     public static int validateIntegers(String message){
 //        Scanner sc = new Scanner(System.in);
         while (true) {
@@ -122,6 +127,25 @@ public class Main {
             }
         }
     }
+
+    private static String stringValidation(String message){
+        Scanner sc = new Scanner(System.in);
+        while (true){
+            System.out.print(message);
+            String res = sc.nextLine();
+
+            if (Pattern.matches("[A-Za-z0-9]{5,10}",res)){
+                return res;
+            }else if (Pattern.matches("(\\s*[A-Za-z0-9]*\\s*)+",res)){
+                System.out.println("Please DO NOT enter white spaces");
+                continue;
+            }
+
+            System.out.println("Please enter valid length between from 5 to 10");
+
+        }
+    }
+
 
 
 }

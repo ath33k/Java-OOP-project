@@ -7,6 +7,7 @@ public class WestminsterShoppingManager implements ShoppingManager {
     private List<Product> productList = new ArrayList<>();
 
     private static final int MAX_PRODUCT = 50;
+    int productCount;
 //    public static WestminsterShoppingManager uowShoppingManager = new WestminsterShoppingManager();
 
 //    private WestminsterShoppingManager() {}
@@ -18,7 +19,7 @@ public class WestminsterShoppingManager implements ShoppingManager {
     @Override
     public void addProduct(Product product) {
         productList.add(product);
-
+        productCount++;
 
     }
 
