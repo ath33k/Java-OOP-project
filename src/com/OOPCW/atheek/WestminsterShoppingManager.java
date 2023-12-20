@@ -6,7 +6,7 @@ import java.util.List;
 public class WestminsterShoppingManager implements ShoppingManager {
     private List<Product> productList = new ArrayList<>();
 
-    private static final int MAX_PRODUCT = 50;
+    private static final int MAX_PRODUCT = 2;
     int productCount;
 //    public static WestminsterShoppingManager uowShoppingManager = new WestminsterShoppingManager();
 
@@ -18,20 +18,54 @@ public class WestminsterShoppingManager implements ShoppingManager {
 
     @Override
     public void addProduct(Product product) {
-        productList.add(product);
-        productCount++;
+        if (MAX_PRODUCT > productCount){
+//            It avoids adding same product to the list (checks for same product id) by iterating through each objects in the list
+            for (Product currProduct: productList){
+                if (currProduct.equals(product)){
+                    System.out.println("This product Already Have it in the list");
+                    return;
+                }
+            }
+            productList.add(product);
+            productCount++;
+        }else {
+            System.out.println("Product list is full");
+        }
+
 
     }
 
     @Override
-    public void deleteProduct(Product product) {
-
+    public void deleteProduct(String id) {
+        if (productList.size() > 0) {
+            for (Product currProduct : productList) {
+                if (currProduct.productID.equals(id)) {
+                    String className = currProduct.getClass().getName();
+                    String classTypeMsg = className.equals("Clothing") ?
+                            "You have removed a clothing product" :
+                            "You have removed a electronic product";
+                    System.out.println(classTypeMsg);
+                    System.out.println(currProduct.toString());
+                    productList.remove(currProduct);
+                    System.out.println(productList.size() + " products left in the list");
+                } else {
+                    System.out.println("The product you wanted to delete not in this list");
+                }
+            }
+        }else{
+            System.out.println("Product list is empty");
+        }
     }
 
     @Override
     public void printAllProducts() {
-        for (Product product : productList){
-            System.out.println(product.toString());
+        for (Product currProduct : productList){
+            String className = currProduct.getClass().getName();
+            String classTypeMsg = className.equals("Clothing") ?
+                    "It's a clothing product" :
+                    "It's a electronic product";
+            System.out.println(classTypeMsg);
+            System.out.println(currProduct.toString());
         }
     }
 

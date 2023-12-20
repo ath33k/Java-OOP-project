@@ -1,6 +1,7 @@
 package com.OOPCW.atheek;
 
 import java.util.Date;
+import java.util.Objects;
 
 public class Electronics extends Product{
     private String brand;
@@ -35,4 +36,6 @@ public class Electronics extends Product{
                 ", warrantyPeriod=" + warrantyPeriod +
                 " }";
     }
+
+
 }

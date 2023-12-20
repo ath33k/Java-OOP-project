@@ -1,6 +1,7 @@
 package com.OOPCW.atheek;
 
 import java.awt.*;
+import java.util.Objects;
 
 public class Clothing extends Product {
     private String size;
@@ -35,4 +36,6 @@ public class Clothing extends Product {
                 ", colour=" + colour +
                 " }";
     }
+
+    
 }
