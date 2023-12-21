@@ -1,13 +1,18 @@
 package com.OOPCW.atheek;
 
+import java.io.*;
+import java.time.Period;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class WestminsterShoppingManager implements ShoppingManager {
     private List<Product> productList = new ArrayList<>();
 
-    private static final int MAX_PRODUCT = 2;
+    private static final int MAX_PRODUCT = 50;
     int productCount;
+
+    String filename = "savedData.txt";
 //    public static WestminsterShoppingManager uowShoppingManager = new WestminsterShoppingManager();
 
 //    private WestminsterShoppingManager() {}
@@ -37,7 +42,7 @@ public class WestminsterShoppingManager implements ShoppingManager {
 
     @Override
     public void deleteProduct(String id) {
-        if (productList.size() > 0) {
+        if (!productList.isEmpty()) {
             for (Product currProduct : productList) {
                 if (currProduct.productID.equals(id)) {
                     String className = currProduct.getClass().getName();
@@ -48,10 +53,10 @@ public class WestminsterShoppingManager implements ShoppingManager {
                     System.out.println(currProduct.toString());
                     productList.remove(currProduct);
                     System.out.println(productList.size() + " products left in the list");
-                } else {
-                    System.out.println("The product you wanted to delete not in this list");
+                    return;
                 }
             }
+            System.out.println("The product you wanted to delete not in this list");
         }else{
             System.out.println("Product list is empty");
         }
@@ -59,19 +64,59 @@ public class WestminsterShoppingManager implements ShoppingManager {
 
     @Override
     public void printAllProducts() {
-        for (Product currProduct : productList){
-            String className = currProduct.getClass().getName();
-            String classTypeMsg = className.equals("Clothing") ?
-                    "It's a clothing product" :
-                    "It's a electronic product";
-            System.out.println(classTypeMsg);
-            System.out.println(currProduct.toString());
+        if (!productList.isEmpty()) {
+            Collections.sort(productList);
+            for (Product currProduct : productList) {
+                String className = currProduct.getClass().getName();
+                String classTypeMsg = className.equals("Clothing") ?
+                        "It's a clothing product" :
+                        "It's a electronic product";
+                System.out.println(classTypeMsg);
+                System.out.println(currProduct.toString());
+            }
+        }else {
+            System.out.println("List is empty");
         }
     }
 
     @Override
-    public void saveFile() {
+    public void saveFile() throws IOException {
+        if (!productList.isEmpty()){
+            FileOutputStream fileOutStr = new FileOutputStream(filename);
+            ObjectOutputStream objOutStr = new ObjectOutputStream(fileOutStr);
 
+            for (Product product : productList){
+                objOutStr.writeObject(product);
+            }
+            objOutStr.flush();
+            fileOutStr.close();
+            objOutStr.close();
+
+        }else {
+            System.out.println("Product list is empty");
+        }
+        System.out.println("All products have saved to the file");
+
+    }
+
+    @Override
+    public void loadFile() throws IOException, ClassNotFoundException {
+        FileInputStream fileInStr = new FileInputStream(filename);
+        ObjectInputStream objInStr = new ObjectInputStream(fileInStr);
+
+        for (;;){
+            try {
+                Product product = (Product) objInStr.readObject();
+                productList.add(product);
+            }catch (EOFException e){
+                break;
+            }
+        }
+
+        fileInStr.close();
+        objInStr.close();
+
+        System.out.println("Data loaded successfully from the file");
     }
 
     @Override

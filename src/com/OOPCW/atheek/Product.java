@@ -2,7 +2,7 @@ package com.OOPCW.atheek;
 
 import java.util.Objects;
 
-public class Product{
+public class Product implements Comparable<Product>{
     protected String productID;
     protected String productName;
     protected int noOfItems;
@@ -72,6 +72,11 @@ public class Product{
     @Override
     public int hashCode() {
         return Objects.hash(productID);
+    }
+
+    @Override
+    public int compareTo(Product other) {
+        return productID.compareTo(other.productID);
     }
 
     /**This method didn't work because it first compares the class type

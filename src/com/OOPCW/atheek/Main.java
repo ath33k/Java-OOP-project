@@ -13,12 +13,12 @@ public class Main {
         label:
             while(true){
                 uowShoppingManager.menu();
-                int mainMenuChoice = validateIntegers(">>> ",10);
+                int mainMenuChoice = validateIntegers(">>> ",0,10);
 
                 switch (mainMenuChoice){
                     case 1:
 //                        System.out.println("Enter '1' to add electronics OR Enter '2' to add Clothing");
-                        int nestedChoice = validateIntegers("Enter '1' to add electronics OR Enter '2' to add Clothing \n>>> ",5);
+                        int nestedChoice = validateIntegers("Enter '1' to add electronics OR Enter '2' to add Clothing \n>>> ",1,5);
                         sc.nextLine();
                         if (nestedChoice == 1){
                             uowShoppingManager.addProduct(addElectronics());
@@ -32,6 +32,7 @@ public class Main {
                         uowShoppingManager.deleteProduct(deleteOption());
                         break;
                     case 3:
+                        uowShoppingManager.printAllProducts();
                         break;
                     case 4:
                         break;
@@ -42,7 +43,7 @@ public class Main {
                         break;
                 }
 //                System.out.println("Press any number to navigate main menu Or enter '999' to exit : ");
-                int extChoice = validateIntegers("Press any number to navigate main menu Or enter '999' to exit : ",1000);
+                int extChoice = validateIntegers("Press any number to navigate main menu Or enter '999' to exit : ",1,1000);
                 if (extChoice == 999){
                     uowShoppingManager.printAllProducts();
                     break;
@@ -56,63 +57,63 @@ public class Main {
 
     public static Clothing addClothing(){
 //        System.out.println("Enter Product ID : ");
-        String productID = stringValidation("Enter Product ID : ",10);
+        String productID = stringValidation("Enter Product ID : ",5,10);
 //        System.out.println("Enter Product name : ");
-        String productName = stringValidation("Enter Product name : ",50);
+        String productName = stringValidation("Enter Product name : ",1,50);
 //        System.out.println("Enter the No of Items : ");
-        int noOfItems = validateIntegers("Enter the No of Items : ",50);
+        int noOfItems = validateIntegers("Enter the No of Items : ",1,50);
 //        System.out.println("Enter the price : ");
         sc.nextLine();
-        double price = validateDoubles("Enter the price : ",10000000);
+        double price = validateDoubles("Enter the price : ",1,10000000);
         sc.nextLine();
 //        System.out.print("Enter the size : ");
-        String size = stringValidation("Enter the size : ",20);
+        String size = stringValidation("Enter the size : ",1,20);
         System.out.println("Enter the colours in RED, GREEN, BLUE values from (0 to 255)");
 //        System.out.println("RED : ");
-        int red = validateIntegers("RED : ",255);
+        int red = validateIntegers("RED : ",0,255);
 //        System.out.println("GREEN : ");
-        int green = validateIntegers("GREEN : ",255);
+        int green = validateIntegers("GREEN : ",0,255);
 //        System.out.println("BLUE : ");
-        int blue = validateIntegers("BLUE : ",255);
+        int blue = validateIntegers("BLUE : ",0,255);
         sc.nextLine();
         return new Clothing(productID,productName,noOfItems,price,size,new Color(red,green,blue));
     }
 
     public static Electronics addElectronics(){
 //        System.out.println("Enter Product ID : ");
-        String productID = stringValidation("Enter Product ID : ",10);
+        String productID = stringValidation("Enter Product ID : ",5,10);
 //        System.out.println("Enter Product name : ");
-        String productName = stringValidation("Enter Product name : ",50);
+        String productName = stringValidation("Enter Product name : ",1,50);
 //        System.out.println("Enter the No of Items : ");
-        int noOfItems = validateIntegers("Enter the No of Items : ",50);
+        int noOfItems = validateIntegers("Enter the No of Items : ",1,50);
 //        System.out.println("Enter the price : ");
-        double price = validateDoubles("Enter the price : ",10000000);
+        double price = validateDoubles("Enter the price : ",1,10000000);
         sc.nextLine();
 //        System.out.print("Enter the Brand : ");
-        String brand = stringValidation("Enter the Brand : ",20);
+        String brand = stringValidation("Enter the Brand : ",1,20);
 //        System.out.println("Enter the warranty period in months");
-        int warranty = validateIntegers("Enter the warranty period in months : ",200);
+        int warranty = validateIntegers("Enter the warranty period in months : ",0,200);
         sc.nextLine();
         return new Electronics(productID,productName,noOfItems,price,brand,warranty);
     }
 
     public static String deleteOption(){
-        String productID = stringValidation("Enter the desired product ID that you want to delete : ",10);
+        String productID = stringValidation("Enter the desired product ID that you want to delete : ",5,10);
         return productID;
     }
 
 
     /** Input Validators including (int, double, String)*/
-    public static int validateIntegers(String message, int range){
+    public static int validateIntegers(String message, int startRange ,int endRange){
 //        Scanner sc = new Scanner(System.in);
         while (true) {
             System.out.print(message);
             try {
                 int res = sc.nextInt();
-                if ( res <= range ){
+                if ( res >= startRange && res <= endRange ){
                     return res;
                 }else {
-                    System.out.println("Out of range");
+                    System.out.println("Please enter number range from " + startRange + " to " + endRange);
                 }
             } catch (Exception e) {
                 sc.nextLine();
@@ -122,16 +123,16 @@ public class Main {
         }
     }
 
-    public static double validateDoubles(String message, int range){
+    public static double validateDoubles(String message, int startRange,int endRange){
 //        Scanner sc = new Scanner(System.in);
         while (true) {
             System.out.print(message);
             try {
                 double res = sc.nextDouble();
-                if ( res <= range ){
+                if ( res >= startRange && res <= endRange ){
                     return res;
                 }else {
-                    System.out.println("Out of range");
+                    System.out.println("Please enter number range from " + startRange + " to " + endRange);
                 }
             } catch (Exception e) {
                 System.out.println("Please enter number values");
@@ -140,22 +141,22 @@ public class Main {
         }
     }
 
-    private static String stringValidation(String message, int range){
+    private static String stringValidation(String message, int startRange,int endRange){
         Scanner sc = new Scanner(System.in);
         while (true){
             System.out.print(message);
-            String res = sc.nextLine();
+            String res = sc.nextLine().trim();
 
-            if (Pattern.matches("[A-Za-z0-9]+",res)){
-                if ( res.length() <= range ){
+            if (Pattern.matches("[A-Za-z0-9\\s]+",res)){
+                if ( res.length() >= startRange && res.length() <= endRange ){
                     return res;
                 }
-            }else if (Pattern.matches("(\\s*[A-Za-z0-9]*\\s*)+",res)){
-                System.out.println("Please DO NOT enter white spaces");
+            }else{
+                System.out.println("Please Enter valid characters");
                 continue;
             }
 
-            System.out.println("Please enter valid length between from 5 to 10");
+            System.out.println("Please enter characters length from " + startRange + " to "+ endRange);
 
         }
     }
