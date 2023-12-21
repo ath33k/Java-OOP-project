@@ -1,25 +1,24 @@
 package com.OOPCW.atheek;
 
 import java.io.*;
-import java.time.Period;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 public class WestminsterShoppingManager implements ShoppingManager {
     private List<Product> productList = new ArrayList<>();
-
     private static final int MAX_PRODUCT = 50;
-    int productCount;
+    private final String filename = "savedData.txt";
+    private int productCount;
+    public static WestminsterShoppingManager uowShoppingManager = new WestminsterShoppingManager();
 
-    String filename = "savedData.txt";
-//    public static WestminsterShoppingManager uowShoppingManager = new WestminsterShoppingManager();
+    /**Used singleton pattern because this class should have only one object
+     * and to avoid instantiate of This class from other the class.*/
+    private WestminsterShoppingManager() {}
 
-//    private WestminsterShoppingManager() {}
-
-//    public static WestminsterShoppingManager getUowShoppingManager() {
-//        return uowShoppingManager;
-//    }
+    public static WestminsterShoppingManager getUowShoppingManager() {
+        return uowShoppingManager;
+    }
 
     @Override
     public void addProduct(Product product) {
@@ -50,7 +49,7 @@ public class WestminsterShoppingManager implements ShoppingManager {
                             "You have removed a clothing product" :
                             "You have removed a electronic product";
                     System.out.println(classTypeMsg);
-                    System.out.println(currProduct.toString());
+                    System.out.println(currProduct);
                     productList.remove(currProduct);
                     System.out.println(productList.size() + " products left in the list");
                     return;
@@ -72,7 +71,7 @@ public class WestminsterShoppingManager implements ShoppingManager {
                         "It's a clothing product" :
                         "It's a electronic product";
                 System.out.println(classTypeMsg);
-                System.out.println(currProduct.toString());
+                System.out.println(currProduct);
             }
         }else {
             System.out.println("List is empty");

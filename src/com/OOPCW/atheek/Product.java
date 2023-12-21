@@ -1,8 +1,9 @@
 package com.OOPCW.atheek;
 
+import java.io.Serializable;
 import java.util.Objects;
 
-public class Product implements Comparable<Product>{
+public class Product implements Comparable<Product>, Serializable {
     protected String productID;
     protected String productName;
     protected int noOfItems;
