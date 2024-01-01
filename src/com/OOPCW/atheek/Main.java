@@ -1,5 +1,6 @@
 package com.OOPCW.atheek;
 
+import javax.swing.*;
 import java.awt.*;
 import java.io.IOException;
 import java.util.Scanner;
@@ -11,6 +12,17 @@ public class Main {
     static WestminsterShoppingManager uowShoppingManager = WestminsterShoppingManager.getUowShoppingManager(); //Singleton pattern usage
 
     public static void main(String[] args)  {
+
+//        WestminsterShoppingCentre frame = new WestminsterShoppingCentre(uowShoppingManager);
+//        frame.setTitle("Westminster Shopping Centre");
+//        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+////        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+////        frame.setSize(screenSize.width,screenSize.height);
+//        frame.setSize(800,800);
+//        frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
+//        frame.setResizable(true);
+//        frame.setVisible(true);
+
 
         try {
             uowShoppingManager.loadFile(); //Load products from a file that previously saved.
@@ -45,7 +57,11 @@ public class Main {
                         }
                         break;
                     case 5:
+                        System.out.println(uowShoppingManager.productCount);
                         break menuLabel;
+                    case 6:
+                        GUIController guiController = new GUIController();
+                        guiController.start();
                     default:
                         System.out.println("Invalid Input");
                         break;

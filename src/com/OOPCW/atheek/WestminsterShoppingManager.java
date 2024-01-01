@@ -6,10 +6,10 @@ import java.util.Collections;
 import java.util.List;
 
 public class WestminsterShoppingManager implements ShoppingManager {
-    private List<Product> productList = new ArrayList<>();
+    protected List<Product> productList = new ArrayList<>();
     private static final int MAX_PRODUCT = 50;
     private final String filename = "savedData.txt";
-    private int productCount;
+    public int productCount;
     public static WestminsterShoppingManager uowShoppingManager = new WestminsterShoppingManager();
 
     /**Used singleton pattern because this class should have only one object
@@ -111,6 +111,7 @@ public class WestminsterShoppingManager implements ShoppingManager {
                 break;
             }
         }
+        productCount = productList.size();
 
         fileInStr.close();
         objInStr.close();
