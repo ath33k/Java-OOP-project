@@ -5,9 +5,12 @@ public class User {
 
     private String password;
 
+    private PurchaseHistory history;
+
     public User(String username, String password) {
         this.username = username;
         this.password = password;
+        this.history = new PurchaseHistory();
     }
 
     public String getUsername() {
@@ -24,6 +27,14 @@ public class User {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public PurchaseHistory getHistory() {
+        return history;
+    }
+
+    public void setHistory(PurchaseHistory history) {
+        this.history = history;
     }
 
     @Override

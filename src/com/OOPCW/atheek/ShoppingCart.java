@@ -10,6 +10,7 @@ public class ShoppingCart {
     int cartCount;
 
     //    Singleton pattern
+
     public static ShoppingCart shoppingCart = new ShoppingCart();
 
     private ShoppingCart() {}
@@ -31,6 +32,21 @@ public class ShoppingCart {
     }
     void remove(){}
     void calculateTotal(){}
+
+    public void clearCart(){
+        this.cart.clear();
+    }
+    public void setCart(List<Product> cart) {
+        this.cart = cart;
+    }
+
+    public int getCartCount() {
+        return cartCount;
+    }
+
+    public void setCartCount(int cartCount) {
+        this.cartCount = cartCount;
+    }
 
     public List<Product> getCart() {
         return cart;

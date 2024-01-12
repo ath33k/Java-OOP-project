@@ -2,24 +2,28 @@ package com.OOPCW.atheek;
 
 import javax.swing.*;
 import javax.swing.table.AbstractTableModel;
-import javax.swing.table.DefaultTableModel;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.List;
 
 public class CartController {
+    User testUser;
     ShoppingCart cartClass = ShoppingCart.getShoppingCart();
     CartView cartView;
     JTable table;
     ShoppingCentreController spCtrl;
 
     CartTableEditor cartTableEditor = new CartTableEditor(cartClass.getCart());
+//    BtnEventHandler handler = new BtnEventHandler();
 
 //    CartCellEditor newcartcell = new CartCellEditor();
 
     WestminsterShoppingManager uowModel = WestminsterShoppingManager.getUowShoppingManager();
-    public CartController(ShoppingCentreController spCtrl){
+    public CartController(ShoppingCentreController spCtrl, User testUser){
         cartView = new CartView(this);
         this.table = cartView.table;
         this.spCtrl = spCtrl;
+        this.testUser = testUser;
     }
 
     void cartInit(){
@@ -31,13 +35,35 @@ public class CartController {
         cartView.setSize(800,800);
         cartView.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         cartView.setVisible(true);
+//        addListeners();
+
+    }
+
+//    void addListeners(){
+//        purchaseBtnEvent();
+//    }
+//
+//    void purchaseBtnEvent(){
+//        cartView.purchaseBtn.addActionListener(e -> {
+//
+//        });
+//    }
+
+    void purchaseConfirmed(){
+        for (Product product: cartClass.getCart()){
+            testUser.getHistory().addPurchasedProducts(product);
+        }
+        cartClass.clearCart();
+        cartLabelUpdate();
     }
 
     public void cartLabelUpdate(){
         double total = updateTotalValue();
+        double discountValue10 = tenPercentDiscount(total);
         double discountValue20 = twentyPercentDiscount(total);
-        double finalTotal = total - discountValue20;
+        double finalTotal = (total - discountValue10) - discountValue20;
         cartView.totalNum.setText(Double.toString(total));
+        cartView.discount10.setText(Double.toString(discountValue10));
         cartView.discount20.setText(Double.toString(discountValue20));
         cartView.finalTotNum.setText(Double.toString(finalTotal));
     }
@@ -47,6 +73,13 @@ public class CartController {
             tot += Double.parseDouble(table.getModel().getValueAt(i,2).toString());
         }
         return tot;
+    }
+
+    public double tenPercentDiscount(double total){
+        if (testUser.getHistory().getPurchaseCount() < 1){
+            return total * 0.1;
+        }
+        return 0;
     }
 
     public double twentyPercentDiscount(double total){
@@ -141,55 +174,20 @@ public class CartController {
             if (aValue instanceof Number){
                 if (columnIndex == 1){
                     cartOfProducts.get(rowIndex).setItemsInCart((int)aValue);
-                    System.out.println(aValue);
                 }
                 fireTableCellUpdated(rowIndex,2);
                 cartLabelUpdate();
                 //sending appropriate object and the value that is changed by input
                 //So that shopping label under the table get updated
-                spCtrl.updateLabels(cartOfProducts.get(rowIndex), (int)aValue);
+                spCtrl.updateLabels(cartOfProducts.get(rowIndex));
+                cartView.purchaseBtn.setEnabled(cartClass.cartCount > 0);
             }
         }
 
 
     }
-//    void updateTable(){
-//        String[] columnNames = {"Product", "Quantity", "Price"};
-//        List<Product> products = cartModel.getCart();
-//        String[][] data = new String[products.size()][3];
-//
-//        int count = 0;
-//        for (Product product: products){
-//            System.out.println(product.productID);
-//            if (product.getClass().getSimpleName().equals("Electronics")){
-//                data[count][0] = product.getProductID() + " " + product.getProductName() + " " + ((Electronics)product).getBrand() + " " + ((Electronics)product).getWarrantyPeriod();
-//                data[count][1] = Integer.toString(1);
-//                data[count][2] = Double.toString(product.price);
-//
-//            }else if (product.getClass().getSimpleName().equals("Clothing")){
-//                data[count][0] = product.getProductID() + " " +  product.getProductName() + " " + ((Clothing)product).getSize() + ", " + ((Clothing) product).getColour();
-//                data[count][1] = Integer.toString(1);
-//                data[count][2] = Double.toString(product.price);
-//            }
-//            count++;
-//        }
-//
-//
-////        TableModel model = new DefaultTableModel(data,columnNames);
-////        cartView.table.setModel(model);
-//
-//        DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
-//        centerRenderer.setHorizontalAlignment(JLabel.CENTER);
-//
-//        cartView.table.getColumnModel().getColumn(0).setCellRenderer(centerRenderer);
-//        cartView.table.getColumnModel().getColumn(1).setCellRenderer(centerRenderer);
-//        cartView.table.getColumnModel().getColumn(2).setCellRenderer(centerRenderer);
-//    }
 
-//    void editCell(){
-//        cartView.table.getColumnModel().getColumn(1).setCellEditor(new CartCellEditor());
-//    }
-//
+
 
 
 

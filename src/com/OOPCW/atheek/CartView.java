@@ -3,13 +3,20 @@ package com.OOPCW.atheek;
 import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 public class CartView extends JFrame {
     CartController spCartCtrl;
     JPanel mainPanel;
     JPanel topPanel;
+
+    JPanel bottomInsideContainer;
+    JPanel mainContainer;
     JPanel bottomPanel;
     JPanel bottomInsidePanel;
+
+    JPanel bottombuttonPanel;
     JTable table;
 
     JScrollPane scrollPane;
@@ -29,6 +36,9 @@ public class CartView extends JFrame {
 
     JLabel finalTotNum;
 
+    JButton purchaseBtn;
+    BtnEventHandler handler;
+
 //    CartCellEditor cellEditor = new CartCellEditor();
 
     public CartView(CartController spCartCtrl) {
@@ -36,20 +46,39 @@ public class CartView extends JFrame {
         addLayout();
         addTable();
         bottomLabels();
+        handler = new BtnEventHandler();
+        purchaseBtn.addActionListener(handler);
     }
 
     void addLayout(){
-        mainPanel = new JPanel(new GridLayout(2,1));
-        mainPanel.setBorder(BorderFactory.createEmptyBorder(50,50,20,50));
+        mainPanel = new JPanel(new BorderLayout());
+        mainPanel.setBorder(BorderFactory.createEmptyBorder(20,20,20,20));
 
-        topPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
-        bottomPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
-        bottomInsidePanel = new JPanel(new GridLayout(4,2,50,50));
+        mainContainer = new JPanel(new GridLayout(2,1));
+        mainContainer.setBorder(BorderFactory.createEmptyBorder(5,50,5,50));
+        mainContainer.setBackground(Color.YELLOW);
+        topPanel = new JPanel(new BorderLayout());
+        topPanel.setBorder(BorderFactory.createEmptyBorder(20,50,5,50));
+        topPanel.setBackground(Color.red);
+        bottomPanel = new JPanel(new BorderLayout());
+        bottomPanel.setBackground(Color.blue);
+        bottomPanel.setBorder(BorderFactory.createEmptyBorder(5,100,5,50));
+        bottomInsideContainer = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+        bottomInsideContainer.setBackground(Color.GREEN);
+        bottomInsidePanel = new JPanel(new GridLayout(4,2,50,20));
+        bottomInsidePanel.setBackground(Color.magenta);
+        bottombuttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
 
-        bottomPanel.add(bottomInsidePanel);
+
+
+
+        bottomPanel.add(bottomInsideContainer,BorderLayout.NORTH);
+        bottomPanel.add(bottombuttonPanel, BorderLayout.SOUTH);
+        bottomInsideContainer.add(bottomInsidePanel);
+        mainContainer.add(topPanel);
+        mainContainer.add(bottomPanel);
         bottomPanel.setBorder(BorderFactory.createEmptyBorder(100,50,50,50));
-        mainPanel.add(topPanel);
-        mainPanel.add(bottomPanel);
+        mainPanel.add(mainContainer, BorderLayout.CENTER);
 
 
         add(mainPanel);
@@ -61,7 +90,7 @@ public class CartView extends JFrame {
         table = new JTable(spCartCtrl.cartTableEditor);
         scrollPane = new JScrollPane(table);
 
-        scrollPane.setPreferredSize(new Dimension(800,400));
+        scrollPane.setPreferredSize(new Dimension(800,300));
         table.setFont(new Font("Arial",Font.PLAIN,16));
         table.setGridColor(Color.black);
         table.getTableHeader().setFont(new Font("Arial",Font.BOLD,18));
@@ -76,7 +105,7 @@ public class CartView extends JFrame {
         table.getColumnModel().getColumn(2).setCellRenderer(centerRenderer);
 
 
-        topPanel.add(scrollPane);
+        topPanel.add(scrollPane,BorderLayout.CENTER);
         table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
     }
 
@@ -147,7 +176,23 @@ public class CartView extends JFrame {
         bottomInsidePanel.add(discount20);
         bottomInsidePanel.add(finalTotText);
         bottomInsidePanel.add(finalTotNum);
+        purchaseBtn = new JButton("Purchase");
+        purchaseBtn.setEnabled(spCartCtrl.cartClass.cartCount > 0);
+        bottombuttonPanel.add(purchaseBtn);
     }
 
+    public class BtnEventHandler implements ActionListener {
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            String message = "Are you sure you want to purchase?";
+            int result = JOptionPane.showConfirmDialog(null, message,"Purchase Confirmation",JOptionPane.YES_NO_OPTION);
+            if (result == JOptionPane.YES_OPTION){
+                spCartCtrl.purchaseConfirmed();
+            } else {
+                System.out.println("No");
+            }
+        }
+    }
 
 }

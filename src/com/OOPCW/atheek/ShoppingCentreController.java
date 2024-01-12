@@ -168,7 +168,7 @@ public class ShoppingCentreController {
 //        table.getColumnModel().getColumn(0).setCellRenderer(colorRenderer);
     }
 
-    void updateLabels(Product product, int value){
+    void updateLabels(Product product){
         for (Product pr: uowModel.productList){
             if (product.equals(pr)){
                 int index = uowModel.productList.indexOf(product);
