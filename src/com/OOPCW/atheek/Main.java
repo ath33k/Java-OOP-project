@@ -13,7 +13,7 @@ public class Main {
 
     public static void main(String[] args)  {
 
-//        WestminsterShoppingCentre frame = new WestminsterShoppingCentre(uowShoppingManager);
+//        ShoppingCentreView frame = new ShoppingCentreView(uowShoppingManager);
 //        frame.setTitle("Westminster Shopping Centre");
 //        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 ////        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
@@ -28,6 +28,7 @@ public class Main {
             uowShoppingManager.loadFile(); //Load products from a file that previously saved.
         } catch (Exception ignored) {}     // Exception will get ignored whether it is (IOException or ClassNotFoundException)
 
+        GUIController guiController = new GUIController();
         menuLabel:
             while(true){
                 uowShoppingManager.menu();
@@ -60,7 +61,7 @@ public class Main {
                         System.out.println(uowShoppingManager.productCount);
                         break menuLabel;
                     case 6:
-                        GUIController guiController = new GUIController();
+
                         guiController.start();
                     default:
                         System.out.println("Invalid Input");
@@ -83,12 +84,8 @@ public class Main {
         double price = validateDoubles("Enter the price : ",1,10000000);
         sc.nextLine();
         String size = stringValidation("Enter the size : ",1,20);
-        System.out.println("Enter the colours in RED, GREEN, BLUE values from (0 to 255)");
-        int red = validateIntegers("RED : ",0,255);
-        int green = validateIntegers("GREEN : ",0,255);
-        int blue = validateIntegers("BLUE : ",0,255);
-        sc.nextLine();
-        return new Clothing(productID,productName,noOfItems,price,size,new Color(red,green,blue));
+        String color = stringValidation("Enter color name : ",1,10);
+        return new Clothing(productID,productName,noOfItems,price,size,color);
     }
 
 

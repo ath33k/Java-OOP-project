@@ -30,12 +30,28 @@ public class Electronics extends Product{
     }
 
     @Override
+    public int getItemsInCart() {
+        return super.getItemsInCart();
+    }
+
+    @Override
+    public void setItemsInCart(int itemCount) {
+        super.setItemsInCart(itemCount);
+    }
+
+
+
+    @Override
     public String toString() {
         return super.toString() +
                 "brand='" + brand + '\'' +
                 ", warrantyPeriod=" + warrantyPeriod +
                 " }";
     }
+
+//    protected Product clone(){
+//        return new Electronics(productID,productName,noOfItems,price,brand,warrantyPeriod);
+//    }
 
 
 }

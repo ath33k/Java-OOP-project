@@ -43,15 +43,16 @@ public class WestminsterShoppingManager implements ShoppingManager {
     public void deleteProduct(String id) {
         if (!productList.isEmpty()) {
             for (Product currProduct : productList) {
-                if (currProduct.productID.equals(id)) {
+                if (currProduct.productID.equalsIgnoreCase(id)) {
                     String className = currProduct.getClass().getName();
+                    System.out.println(currProduct);
+                    productList.remove(currProduct);
                     String classTypeMsg = className.equals("Clothing") ?
                             "You have removed a clothing product" :
                             "You have removed a electronic product";
                     System.out.println(classTypeMsg);
-                    System.out.println(currProduct);
-                    productList.remove(currProduct);
-                    System.out.println(productList.size() + " products left in the list");
+                    productCount--;
+                    System.out.println(productCount + " products left in the list");
                     return;
                 }
             }

@@ -1,10 +1,13 @@
 package com.OOPCW.atheek;
 
 public class GUIController {
-    WestminsterShoppingCentreController spCTRL = new WestminsterShoppingCentreController();
+    ShoppingCentreController shoppingCentreCTRL;
+    CartController cartController;
 
     void start(){
-        spCTRL.mainInit();
+        shoppingCentreCTRL = new ShoppingCentreController();
+        cartController = new CartController(shoppingCentreCTRL);
+        shoppingCentreCTRL.mainInit(cartController);
 
     }
 }

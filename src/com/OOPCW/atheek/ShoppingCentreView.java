@@ -1,24 +1,40 @@
 package com.OOPCW.atheek;
 
 import javax.swing.*;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableModel;
 import java.awt.*;
 import java.util.List;
 
-public class WestminsterShoppingCentre {
+public class ShoppingCentreView extends JFrame{
 
-    JFrame mainframe;
+    ShoppingCentreController spCtrl;
 //    JFrame cartFrame;
 
-    public WestminsterShoppingCentre(JFrame mainframe) {
-        this.mainframe = mainframe;
+    public ShoppingCentreView(ShoppingCentreController spCTRL) {
+        this.spCtrl = spCTRL;
+
+        addLayouts();
+        addComponentHead();
+        addComponentBody();
+        addComponentFooter();
+
     }
 
     Font boldFont = new Font("Arial",Font.BOLD,18);
     Font bodyFont = new Font("Arial",Font.PLAIN,16);
 
     //  JPanel
+    JPanel headerPanel;
+    JPanel bodyPanel;
+    JPanel footerPanel;
+    JPanel bodyNorthPanel;
+    JPanel bodyCenterPanel;
+    JPanel bodySouthPanel;
+    JPanel bodyNorthInside;
+    JPanel bodySouthInside;
     JPanel topLeftPanel;
     JPanel topRightPanel;
     JPanel middlePanel;
@@ -49,37 +65,42 @@ public class WestminsterShoppingCentre {
     GridBagConstraints constraints = new GridBagConstraints();
 
     void addLayouts(){
-        mainframe.setLayout(new GridBagLayout());
-        constraints.weightx = 1;
-        constraints.weighty = 1;
-        topLeftPanel = new JPanel();
-        topRightPanel = new JPanel();
-//        topLeftPanel.setBackground(Color.red);
-//        topRightPanel.setBackground(Color.green);
-        constraints.fill = GridBagConstraints.BOTH;
-        constraints.gridy = 0;
-        mainframe.add(topLeftPanel,constraints);
-        mainframe.add(topRightPanel,constraints);
+        setLayout(new BorderLayout());
+        ((JPanel)getContentPane()).setBorder(BorderFactory.createEmptyBorder(10,50,10,50));
+        headerPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+        headerPanel.setBackground(Color.blue);
+
+        bodyPanel = new JPanel(new BorderLayout(0,10));
+        bodyPanel.setBorder(BorderFactory.createEmptyBorder(5,50,5,50));
+        bodyPanel.setBackground(Color.CYAN);
+        bodyNorthPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        bodyNorthPanel.setBorder(BorderFactory.createEmptyBorder(10,50,65,0));
+        bodyNorthPanel.setBackground(Color.GREEN);
+        bodyNorthInside = new JPanel(new GridLayout(1,2,30,10));
+        bodyNorthInside.setBackground(Color.red);
+        bodyCenterPanel = new JPanel(new GridLayout(1,1));
+        bodyCenterPanel.setBackground(Color.YELLOW);
+        bodySouthPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        bodySouthPanel.setBorder(BorderFactory.createEmptyBorder(5,30,5,0));
+        bodySouthPanel.setBackground(Color.magenta);
+        bodySouthInside = new JPanel(new GridLayout(7,1,10,10));
+        bodySouthPanel.setBackground(Color.pink);
 
 
-        middlePanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
-//        middlePanel.setBackground(Color.yellow);
-        constraints.fill = GridBagConstraints.BOTH;
-        constraints.gridy = 1;
-        constraints.gridwidth = 2;
-        mainframe.add(middlePanel,constraints);
+        bodyPanel.add(bodyNorthPanel, BorderLayout.NORTH);
+        bodyNorthPanel.add(bodyNorthInside);
+        bodyPanel.add(bodyCenterPanel, BorderLayout.CENTER);
+        bodyPanel.add(bodySouthPanel, BorderLayout.SOUTH);
+        bodySouthPanel.add(bodySouthInside);
 
-        bottomPanel = new JPanel(new BorderLayout());
-        bottomLeft = new JPanel();
-        bottomDown = new JPanel(new FlowLayout(FlowLayout.CENTER));
-        bottomLeft.setLayout(new BoxLayout(bottomLeft,BoxLayout.Y_AXIS));
-        JPanel bottomDown = new JPanel(new FlowLayout(FlowLayout.CENTER));
-//        bottomPanel.setBackground(Color.blue);
-//        bottomLeft.setBackground(Color.red);
-//        bottomDown.setBackground(Color.yellow);
-        constraints.fill = GridBagConstraints.BOTH;
-        constraints.gridy = 2;
-        mainframe.add(bottomPanel,constraints);
+        footerPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+
+        add(headerPanel,BorderLayout.NORTH);
+
+        add(bodyPanel,BorderLayout.CENTER);
+
+        add(footerPanel,BorderLayout.SOUTH);
+
     }
 
     void addComponentHead(){
@@ -91,58 +112,50 @@ public class WestminsterShoppingCentre {
         cart.setFocusPainted(false);
         cart.setToolTipText("Go to Cart");
 
-        topLeftPanel.setLayout(new FlowLayout(FlowLayout.RIGHT,150,40));
-        topLeftPanel.add(selectCategoryLabel);
-        selectCategoryLabel.setFont(bodyFont);
-        topLeftPanel.add(comboBox);
+        headerPanel.add(cart);
 
+        selectCategoryLabel.setFont(bodyFont);
         comboBox.setFont(bodyFont);
-        topRightPanel.setLayout(new FlowLayout(FlowLayout.RIGHT,30,20));
-        topRightPanel.add(cart);
-        cart.setFont(boldFont);
+        bodyNorthInside.add(selectCategoryLabel);
+        bodyNorthInside.add(comboBox);
+
     }
 
     void addComponentBody(){
-        table = new JTable();
-        scrollPane = new JScrollPane(table);
-        scrollPane.setPreferredSize(new Dimension(1200,300));
-        List<Product> productlist = WestminsterShoppingManager.getUowShoppingManager().productList;
-        String[] columnNames = {"ProductID","Name","Category","Price","Info"};
-        String[][] data = new String[productlist.size()][5];
 
-        int count = 0;
-        for (Product product: WestminsterShoppingManager.getUowShoppingManager().productList){
-            data[count][0] = product.getProductID();
-            data[count][1] = product.getProductName();
-            data[count][2] = product.getClass().getSimpleName();
-            data[count][3] = String.valueOf(product.getPrice());
-            if (product.getClass().getName().equals("Electronics")){
-                data[count][4] = ((Electronics)product).getBrand() + ", "+ ((Electronics) product).getWarrantyPeriod() + " Weeks Warranty";
-            }else if (product.getClass().getName().equals("Clothing")){
-                data[count][4] = ((Clothing)product).getSize() + ", " + ((Clothing) product).getColour();
-            }
-            count++;
-        }
+        table = new JTable(spCtrl.productTableEditor);
+        scrollPane = new JScrollPane(table);
+        scrollPane.setPreferredSize(new Dimension(800,300));
 
         table.setFont(new Font("Arial",Font.PLAIN,16));
         table.setGridColor(Color.black);
         table.getTableHeader().setFont(boldFont);
         table.setRowHeight(30);
 
-        TableModel model = new DefaultTableModel(data,columnNames);
-        table.setDefaultEditor(Object.class, null);
-        table.setModel(model);
-        middlePanel.add(scrollPane);
+        bodyCenterPanel.add(scrollPane);
         table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        table.setRowSorter(spCtrl.tableSorter);
+
+        table.getTableHeader().setReorderingAllowed(false);
+        table.getTableHeader().setResizingAllowed(false);
+
+
+        DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
+        centerRenderer.setHorizontalAlignment(JLabel.CENTER);
+
+        table.getColumnModel().getColumn(0).setCellRenderer(centerRenderer);
+        table.getColumnModel().getColumn(1).setCellRenderer(centerRenderer);
+        table.getColumnModel().getColumn(2).setCellRenderer(centerRenderer);
+        table.getColumnModel().getColumn(3).setCellRenderer(centerRenderer);
+        table.getColumnModel().getColumn(4).setCellRenderer(centerRenderer);
 
     }
+
+
 
     void addComponentFooter(){
         addToCartBtn = new JButton("Add to Shopping Cart");
         addToCartBtn.setFont(boldFont);
-
-        bottomPanel.add(bottomLeft, BorderLayout.CENTER);
-        bottomPanel.add(bottomDown, BorderLayout.PAGE_END);
 
         detailsLabel = new JLabel("Selected Product - Details");
         detailsLabel.setFont(boldFont);
@@ -160,26 +173,27 @@ public class WestminsterShoppingCentre {
         itemAvailableLabel.setFont(boldFont);
 
 
-        bottomLeft.add(Box.createRigidArea(new Dimension(100,0)));
-        bottomLeft.add(detailsLabel);
-        bottomLeft.add(Box.createRigidArea(new Dimension(0,20)));
-        bottomLeft.add(productIdLabel);
-        bottomLeft.add(Box.createVerticalGlue());
-        bottomLeft.add(categoryLabel);
-        bottomLeft.add(Box.createVerticalGlue());
-        bottomLeft.add(nameLabel);
-        bottomLeft.add(Box.createVerticalGlue());
-        bottomLeft.add(sizeLabel);
-        bottomLeft.add(Box.createVerticalGlue());
-        bottomLeft.add(colourLabel);
-        bottomLeft.add(Box.createVerticalGlue());
-        bottomLeft.add(itemAvailableLabel);
+//        bottomLeft.add(Box.createRigidArea(new Dimension(100,0)));
+        bodySouthInside.add(detailsLabel);
+//        bottomLeft.add(Box.createRigidArea(new Dimension(0,20)));
+        bodySouthInside.add(productIdLabel);
+//        bottomLeft.add(Box.createVerticalGlue());
+        bodySouthInside.add(categoryLabel);
+//        bottomLeft.add(Box.createVerticalGlue());
+        bodySouthInside.add(nameLabel);
+//        bottomLeft.add(Box.createVerticalGlue());
+        bodySouthInside.add(sizeLabel);
+//        bottomLeft.add(Box.createVerticalGlue());
+        bodySouthInside.add(colourLabel);
+//        bottomLeft.add(Box.createVerticalGlue());
+        bodySouthInside.add(itemAvailableLabel);
 
-        bottomDown.add(addToCartBtn);
+//        bottomDown.add(addToCartBtn);
+        footerPanel.add(addToCartBtn);
     }
 
 
-//    public WestminsterShoppingCentre(WestminsterShoppingManager uowShoppingManager) {
+//    public ShoppingCentreView(WestminsterShoppingManager uowShoppingManager) {
 //        WestminsterShoppingManager shoppingManager = uowShoppingManager;
 //
 //        setLayout(new GridBagLayout());

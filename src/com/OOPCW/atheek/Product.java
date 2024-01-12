@@ -3,17 +3,21 @@ package com.OOPCW.atheek;
 import java.io.Serializable;
 import java.util.Objects;
 
-public class Product implements Comparable<Product>, Serializable {
+public abstract class Product implements Comparable<Product>, Serializable {
     protected String productID;
     protected String productName;
     protected int noOfItems;
     protected double price;
+    protected int copyOfItemsCount;
+    protected int itemsInCart;
 
     protected Product(String productID, String productName, int noOfItems, double price) {
         this.productID = productID;
         this.productName = productName;
         this.noOfItems = noOfItems;
         this.price = price;
+        this.itemsInCart = 0;
+        this.copyOfItemsCount = noOfItems;
     }
 
 
@@ -47,6 +51,18 @@ public class Product implements Comparable<Product>, Serializable {
 
     public void setPrice(double price) {
         this.price = price;
+    }
+
+    public int getItemsInCart() {
+        return itemsInCart;
+    }
+
+    public void setItemsInCart(int itemCount) {
+        this.noOfItems = copyOfItemsCount;
+        if (noOfItems >= itemCount){
+            this.noOfItems -= itemCount;
+            this.itemsInCart = itemCount;
+        }
     }
 
     @Override

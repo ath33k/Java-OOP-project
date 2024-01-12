@@ -5,9 +5,9 @@ import java.util.Objects;
 
 public class Clothing extends Product {
     private String size;
-    private Color colour;
+    private String colour;
 
-    public Clothing(String productID, String productName, int noOfItems, double price, String size, Color colour) {
+    public Clothing(String productID, String productName, int noOfItems, double price, String size, String colour) {
         super(productID, productName, noOfItems, price);
         this.size = size;
         this.colour = colour;
@@ -21,12 +21,22 @@ public class Clothing extends Product {
         this.size = size;
     }
 
-    public Color getColour() {
+    public String getColour() {
         return colour;
     }
 
-    public void setColour(Color colour) {
+    public void setColour(String colour) {
         this.colour = colour;
+    }
+
+    @Override
+    public int getItemsInCart() {
+        return super.getItemsInCart();
+    }
+
+    @Override
+    public void setItemsInCart(int itemCount) {
+        super.setItemsInCart(itemCount);
     }
 
     @Override
