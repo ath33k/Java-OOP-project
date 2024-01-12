@@ -13,12 +13,12 @@ public class ShoppingCentreController {
     WestminsterShoppingManager uowModel = WestminsterShoppingManager.getUowShoppingManager();
 
     CartController CartCtrl;
-    DefaultTableModel model;
+//    DefaultTableModel model;
     JTable table;
 
     ProductTableEditor productTableEditor = new ProductTableEditor(uowModel.productList);
 
-    TableRowSorter<ProductTableEditor> tableSorter = new TableRowSorter<>(productTableEditor);
+    TableRowSorter<TableModel> tableSorter = new TableRowSorter<>(productTableEditor);
 
 
 
@@ -38,17 +38,19 @@ public class ShoppingCentreController {
         shoppingView.setExtendedState(JFrame.MAXIMIZED_BOTH);
         shoppingView.setVisible(true);
         addEventListeners();
+        setFilter();
+        table.setRowSorter(tableSorter);
     }
 
 
 
     public class ProductTableEditor extends AbstractTableModel{
-
         List<Product> listOfProducts;
 
         public ProductTableEditor(List<Product> listOfProducts) {
             this.listOfProducts = listOfProducts;
         }
+
 
         @Override
         public int getRowCount() {
@@ -85,20 +87,32 @@ public class ShoppingCentreController {
 
         @Override
         public Object getValueAt(int rowIndex, int columnIndex) {
-            Product product = listOfProducts.get(rowIndex);
-            switch (columnIndex){
-                case 0: return product.getProductID();
-                case 1: return product.getProductName();
-                case 2: return product.getClass().getSimpleName();
-                case 3: return product.getPrice();
-                case 4:
-                    if (product.getClass().getSimpleName().equals("Electronics")){
-                        return ((Electronics)product).getBrand() + ", "+ ((Electronics) product).getWarrantyPeriod() + " Weeks Warranty";
-                    }else if (product.getClass().getSimpleName().equals("Clothing")){
-                        return ((Clothing)product).getSize() + ", " + ((Clothing) product).getColour();
-                    }
-                default: return null;
+            try {
+                Product product = listOfProducts.get(rowIndex);
+                System.out.println(listOfProducts.size());
+                switch (columnIndex) {
+                    case 0:
+                        return product.getProductID();
+                    case 1:
+                        return product.getProductName();
+                    case 2:
+                        return product.getClass().getSimpleName();
+                    case 3:
+                        return product.getPrice();
+                    case 4:
+                        if (product.getClass().getSimpleName().equals("Electronics")) {
+                            return ((Electronics) product).getBrand() + ", " + ((Electronics) product).getWarrantyPeriod() + " Weeks Warranty";
+                        } else if (product.getClass().getSimpleName().equals("Clothing")) {
+                            return ((Clothing) product).getSize() + ", " + ((Clothing) product).getColour();
+                        }
+                    default:
+                        return null;
+                }
+            }catch (IndexOutOfBoundsException e){
+                System.out.println("curr row index" + rowIndex);
+                System.out.println("size" + listOfProducts.size());
             }
+            return null;
         }
 
         @Override
@@ -115,6 +129,25 @@ public class ShoppingCentreController {
         addToCartEvent();
     }
 
+
+    void setFilter(){
+        shoppingView.comboBox.addActionListener(new ActionListener() {
+//            TableRowSorter<TableModel> model = new TableRowSorter<>(productTableEditor);
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+                String value = (String) shoppingView.comboBox.getSelectedItem();
+
+                if (value.equals("Electronics")){
+                    tableSorter.setRowFilter(RowFilter.regexFilter(value,2));
+                } else if (value.equals("Clothing")) {
+                    tableSorter.setRowFilter(RowFilter.regexFilter(value,2));
+                }else {
+                    tableSorter.setRowFilter(RowFilter.regexFilter(".*",2));
+                }
+            }
+        });
+    }
 
 
     void addTableColor(){
@@ -139,7 +172,7 @@ public class ShoppingCentreController {
         for (Product pr: uowModel.productList){
             if (product.equals(pr)){
                 int index = uowModel.productList.indexOf(product);
-                labelCodes(index);
+                labelCodes(table.convertRowIndexToModel(index));
             }
         }
     }
@@ -147,7 +180,7 @@ public class ShoppingCentreController {
     void tableSelectionEvent(){
         table.getSelectionModel().addListSelectionListener(e -> {
             if (!e.getValueIsAdjusting()){
-                int row = table.getSelectedRow();
+                int row = table.convertRowIndexToModel(table.getSelectedRow());
                 labelCodes(row);
             }
         });
@@ -160,7 +193,12 @@ public class ShoppingCentreController {
         shoppingView.nameLabel.setText("Name: " + productTableEditor.getValueAt(row,2));
         shoppingView.sizeLabel.setText("Size: " + productTableEditor.getValueAt(row,3));
         shoppingView.colourLabel.setText("Colour: " + productTableEditor.getValueAt(row,4));
-        shoppingView.itemAvailableLabel.setText("Item available: " + uowModel.productList.get(row).noOfItems);
+        for (Product product: uowModel.productList){
+            if (product.productID.equals(productTableEditor.getValueAt(row,0))){
+                shoppingView.itemAvailableLabel.setText("Item available: " + product.noOfItems);
+            }
+        }
+//        shoppingView.itemAvailableLabel.setText("Item available: " + uowModel.productList.get(row).noOfItems);
     }
 
     void cartFrameEvent(){
@@ -172,7 +210,7 @@ public class ShoppingCentreController {
 
     void addToCartEvent(){
         shoppingView.addToCartBtn.addActionListener(e -> {
-            int row = table.getSelectedRow();
+            int row = table.convertRowIndexToModel(table.getSelectedRow());
             String value = productTableEditor.getValueAt(row,0).toString();
             System.out.println(productTableEditor.getValueAt(row,0).getClass().getSimpleName());
             for (Product product: uowModel.productList){
