@@ -151,24 +151,6 @@ public class ShoppingCentreController {
     }
 
 
-//    void addTableColor(){
-//        DefaultTableCellRenderer colorRenderer = new DefaultTableCellRenderer();
-//        colorRenderer.setBackground(Color.red);
-//
-//        for (Product product: uowModel.productList){
-//            if (product.getNoOfItems() < 3){
-//                for (int i = 0; i < table.getModel().getRowCount(); i++){
-//                    String value = table.getModel().getValueAt(i,0).toString();
-//                    if (value.equals(product.productID)){
-//
-//                    }
-//                }
-//            }
-//        }
-//
-////        table.getColumnModel().getColumn(0).setCellRenderer(colorRenderer);
-//    }
-
     /** Updates and refresh the label of selected Items*/
     void updateLabels(Product product){
         for (Product pr: uowModel.productList){
