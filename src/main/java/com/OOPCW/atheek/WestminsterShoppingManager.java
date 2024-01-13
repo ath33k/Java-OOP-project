@@ -46,7 +46,7 @@ public class WestminsterShoppingManager implements ShoppingManager {
         if (!productList.isEmpty()) {
             for (Product currProduct : productList) {
                 if (currProduct.productID.equalsIgnoreCase(id)) {
-                    String className = currProduct.getClass().getName();
+                    String className = currProduct.getClass().getSimpleName();
                     System.out.println(currProduct);
                     productList.remove(currProduct);
                     String classTypeMsg = className.equals("Clothing") ?
@@ -70,7 +70,7 @@ public class WestminsterShoppingManager implements ShoppingManager {
         if (!productList.isEmpty()) {
             Collections.sort(productList);
             for (Product currProduct : productList) {
-                String className = currProduct.getClass().getName();
+                String className = currProduct.getClass().getSimpleName();
                 String classTypeMsg = className.equals("Clothing") ?
                         "It's a clothing product" :
                         "It's a electronic product";

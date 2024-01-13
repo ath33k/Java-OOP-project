@@ -94,7 +94,7 @@ public class CartController {
                 clothingCount++;
             }
         }
-        return electronicCount >= 3 || clothingCount >= 3 ? total * 0.1 : 0;
+        return electronicCount >= 3 || clothingCount >= 3 ? total * 0.2 : 0;
     }
 
     /** Inner class abstractModel this will operate and make changes in the Jtable  */
