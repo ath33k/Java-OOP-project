@@ -10,6 +10,7 @@ public abstract class Product implements Comparable<Product>, Serializable {
     protected double price;
     protected int copyOfItemsCount;
     protected int itemsInCart;
+    protected int purchasedQuantity;
 
     protected Product(String productID, String productName, int noOfItems, double price) {
         this.productID = productID;
@@ -59,10 +60,12 @@ public abstract class Product implements Comparable<Product>, Serializable {
 
     public void setItemsInCart(int itemCount) {
         this.noOfItems = copyOfItemsCount;
-        if (noOfItems >= itemCount){
+        if (noOfItems >= itemCount && itemCount > 0){
             this.noOfItems -= itemCount;
             this.itemsInCart = itemCount;
+            return;
         }
+        this.itemsInCart = 0;
     }
 
     @Override
@@ -96,18 +99,4 @@ public abstract class Product implements Comparable<Product>, Serializable {
         return productID.compareTo(other.productID);
     }
 
-    /**This method didn't work because it first compares the class type
-     * this only works if we add two object of same class in the product list*/
-//    @Override
-//    public boolean equals(Object o) {
-//        if (this == o) return true;
-//        if (o == null || getClass() != o.getClass()) return false;
-//        Product product = (Product) o;
-//        return Objects.equals(productID, product.productID);
-//    }
-//
-//    @Override
-//    public int hashCode() {
-//        return Objects.hash(productID);
-//    }
 }

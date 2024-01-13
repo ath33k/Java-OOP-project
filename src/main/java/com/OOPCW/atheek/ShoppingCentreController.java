@@ -9,24 +9,24 @@ import java.util.List;
 
 public class ShoppingCentreController {
     ShoppingCentreView shoppingView;
-
     WestminsterShoppingManager uowModel = WestminsterShoppingManager.getUowShoppingManager();
 
     CartController CartCtrl;
-//    DefaultTableModel model;
     JTable table;
-
     ProductTableEditor productTableEditor = new ProductTableEditor(uowModel.productList);
-
     TableRowSorter<TableModel> tableSorter = new TableRowSorter<>(productTableEditor);
 
 
-
+    /** Initialising Constructor which shares composition relationship with
+     *  ShoppingCentreView*/
     public ShoppingCentreController() {
         shoppingView = new ShoppingCentreView(this);
         this.table = shoppingView.table;
     }
 
+
+    /**This method will make the frame visible and
+     * has eventListeners*/
     void mainInit(CartController spCartCtrl){
         this.CartCtrl = spCartCtrl;
         shoppingView.setTitle("Westminster Shopping Centre");
@@ -43,7 +43,7 @@ public class ShoppingCentreController {
     }
 
 
-
+    /** Inner class ProductTableEditor to manage the JTable of shopping centre */
     public class ProductTableEditor extends AbstractTableModel{
         List<Product> listOfProducts;
 
@@ -89,7 +89,6 @@ public class ShoppingCentreController {
         public Object getValueAt(int rowIndex, int columnIndex) {
             try {
                 Product product = listOfProducts.get(rowIndex);
-                System.out.println(listOfProducts.size());
                 switch (columnIndex) {
                     case 0:
                         return product.getProductID();
@@ -108,21 +107,21 @@ public class ShoppingCentreController {
                     default:
                         return null;
                 }
-            }catch (IndexOutOfBoundsException e){
-                System.out.println("curr row index" + rowIndex);
-                System.out.println("size" + listOfProducts.size());
+            }catch (IndexOutOfBoundsException ignored){
+
             }
             return null;
         }
 
         @Override
         public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
+            // firing this to refresh the whole rows in the table so changes will appear
             fireTableRowsUpdated(rowIndex,rowIndex);
         }
     }
 
 
-
+    /** All in one event listeners*/
     void addEventListeners(){
         tableSelectionEvent();
         cartFrameEvent();
@@ -130,9 +129,11 @@ public class ShoppingCentreController {
     }
 
 
+    /** Sets the table filter which will filter the table by comboBox values
+     * "All" , "Electronics", "Clothing" it uses regexFilter to filter using regex
+     * */
     void setFilter(){
-        shoppingView.comboBox.addActionListener(new ActionListener() {
-//            TableRowSorter<TableModel> model = new TableRowSorter<>(productTableEditor);
+        shoppingView.comboBox.addActionListener(new ActionListener() {;
             @Override
             public void actionPerformed(ActionEvent e) {
 
@@ -150,24 +151,25 @@ public class ShoppingCentreController {
     }
 
 
-    void addTableColor(){
-        DefaultTableCellRenderer colorRenderer = new DefaultTableCellRenderer();
-        colorRenderer.setBackground(Color.red);
+//    void addTableColor(){
+//        DefaultTableCellRenderer colorRenderer = new DefaultTableCellRenderer();
+//        colorRenderer.setBackground(Color.red);
+//
+//        for (Product product: uowModel.productList){
+//            if (product.getNoOfItems() < 3){
+//                for (int i = 0; i < table.getModel().getRowCount(); i++){
+//                    String value = table.getModel().getValueAt(i,0).toString();
+//                    if (value.equals(product.productID)){
+//
+//                    }
+//                }
+//            }
+//        }
+//
+////        table.getColumnModel().getColumn(0).setCellRenderer(colorRenderer);
+//    }
 
-        for (Product product: uowModel.productList){
-            if (product.getNoOfItems() < 3){
-                for (int i = 0; i < table.getModel().getRowCount(); i++){
-                    String value = table.getModel().getValueAt(i,0).toString();
-                    if (value.equals(product.productID)){
-
-                    }
-                }
-            }
-        }
-
-//        table.getColumnModel().getColumn(0).setCellRenderer(colorRenderer);
-    }
-
+    /** Updates and refresh the label of selected Items*/
     void updateLabels(Product product){
         for (Product pr: uowModel.productList){
             if (product.equals(pr)){
@@ -177,15 +179,18 @@ public class ShoppingCentreController {
         }
     }
 
+    /**Table selection Event, which responsible for user selecting a product in the table*/
     void tableSelectionEvent(){
         table.getSelectionModel().addListSelectionListener(e -> {
             if (!e.getValueIsAdjusting()){
-                int row = table.convertRowIndexToModel(table.getSelectedRow());
+                int row = table.getSelectedRow();
                 labelCodes(row);
+
             }
         });
     }
 
+    /** Codes for labels update  */
     void labelCodes(int row){
         shoppingView.detailsLabel.setText("Selected Product - Details");
         shoppingView.productIdLabel.setText("Product ID : " + productTableEditor.getValueAt(row,0));
@@ -196,26 +201,27 @@ public class ShoppingCentreController {
         for (Product product: uowModel.productList){
             if (product.productID.equals(productTableEditor.getValueAt(row,0))){
                 shoppingView.itemAvailableLabel.setText("Item available: " + product.noOfItems);
+                shoppingView.addToCartBtn.setEnabled(product.noOfItems > 0);
+
             }
         }
-//        shoppingView.itemAvailableLabel.setText("Item available: " + uowModel.productList.get(row).noOfItems);
     }
 
+    /**Clicking Shopping cart event, which will display the shopping cart*/
     void cartFrameEvent(){
         shoppingView.cart.addActionListener(e -> {
             CartCtrl.cartInit();
-            System.out.println(CartCtrl.cartClass.cartCount);
         });
     }
 
+    /** method of add to cart event
+     * It takes selected table row and added to shopping cart list*/
     void addToCartEvent(){
         shoppingView.addToCartBtn.addActionListener(e -> {
             int row = table.convertRowIndexToModel(table.getSelectedRow());
             String value = productTableEditor.getValueAt(row,0).toString();
-            System.out.println(productTableEditor.getValueAt(row,0).getClass().getSimpleName());
             for (Product product: uowModel.productList){
                 if (product.getProductID().equals(value)){
-                    System.out.println(product.getClass().getSimpleName());
                     CartCtrl.cartClass.add(product);
                 }
             }

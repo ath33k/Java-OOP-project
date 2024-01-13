@@ -3,26 +3,19 @@ package com.OOPCW.atheek;
 import javax.swing.*;
 import javax.swing.table.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.util.List;
-import java.util.Objects;
 
 public class ShoppingCentreView extends JFrame{
 
     ShoppingCentreController spCtrl;
-//    JFrame cartFrame;
 
     public ShoppingCentreView(ShoppingCentreController spCTRL) {
         this.spCtrl = spCTRL;
-
         addLayouts();
         addComponentHead();
         addComponentBody();
         addComponentFooter();
 
     }
-
     Font boldFont = new Font("Arial",Font.BOLD,18);
     Font bodyFont = new Font("Arial",Font.PLAIN,16);
 
@@ -56,31 +49,28 @@ public class ShoppingCentreView extends JFrame{
     JTable table;
     JScrollPane scrollPane;
 
-    Object[] columnNames;
-    TableModel model;
 
-
+    /**Create main layout to the Frame
+     * setting up JPanels and layout managers*/
     void addLayouts(){
         setLayout(new BorderLayout());
         ((JPanel)getContentPane()).setBorder(BorderFactory.createEmptyBorder(10,50,10,50));
         headerPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
-        headerPanel.setBackground(Color.blue);
 
         bodyPanel = new JPanel(new BorderLayout(0,10));
         bodyPanel.setBorder(BorderFactory.createEmptyBorder(5,50,5,50));
-        bodyPanel.setBackground(Color.CYAN);
+
         bodyNorthPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         bodyNorthPanel.setBorder(BorderFactory.createEmptyBorder(10,50,65,0));
-        bodyNorthPanel.setBackground(Color.GREEN);
+
         bodyNorthInside = new JPanel(new GridLayout(1,2,30,10));
-        bodyNorthInside.setBackground(Color.red);
+
         bodyCenterPanel = new JPanel(new GridLayout(1,1));
-        bodyCenterPanel.setBackground(Color.YELLOW);
+
         bodySouthPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         bodySouthPanel.setBorder(BorderFactory.createEmptyBorder(5,30,5,0));
-        bodySouthPanel.setBackground(Color.magenta);
+
         bodySouthInside = new JPanel(new GridLayout(7,1,10,10));
-        bodySouthPanel.setBackground(Color.pink);
 
 
         bodyPanel.add(bodyNorthPanel, BorderLayout.NORTH);
@@ -90,15 +80,13 @@ public class ShoppingCentreView extends JFrame{
         bodySouthPanel.add(bodySouthInside);
 
         footerPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
-
         add(headerPanel,BorderLayout.NORTH);
-
         add(bodyPanel,BorderLayout.CENTER);
-
         add(footerPanel,BorderLayout.SOUTH);
 
     }
 
+    /**Adding Components to Top part of the layouts*/
     void addComponentHead(){
         selectCategoryLabel = new JLabel("Select Product Category");
         category = new String[]{"All", "Electronics", "Clothing"};
@@ -132,6 +120,7 @@ public class ShoppingCentreView extends JFrame{
 //                return comp;
 //            }
 
+    /**Adding components to the body part of layouts*/
     void addComponentBody(){
         table = new JTable(spCtrl.productTableEditor);
         scrollPane = new JScrollPane(table);
@@ -144,10 +133,8 @@ public class ShoppingCentreView extends JFrame{
 
         bodyCenterPanel.add(scrollPane);
         table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-
         table.getTableHeader().setReorderingAllowed(false);
         table.getTableHeader().setResizingAllowed(false);
-
 
         DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
         centerRenderer.setHorizontalAlignment(JLabel.CENTER);
@@ -162,6 +149,7 @@ public class ShoppingCentreView extends JFrame{
 
 
 
+    /** Adding components to the bottom part of the Layouts*/
     void addComponentFooter(){
         addToCartBtn = new JButton("Add to Shopping Cart");
         addToCartBtn.setFont(boldFont);
@@ -181,23 +169,13 @@ public class ShoppingCentreView extends JFrame{
         itemAvailableLabel = new JLabel("Item available: ");
         itemAvailableLabel.setFont(boldFont);
 
-
-//        bottomLeft.add(Box.createRigidArea(new Dimension(100,0)));
         bodySouthInside.add(detailsLabel);
-//        bottomLeft.add(Box.createRigidArea(new Dimension(0,20)));
         bodySouthInside.add(productIdLabel);
-//        bottomLeft.add(Box.createVerticalGlue());
         bodySouthInside.add(categoryLabel);
-//        bottomLeft.add(Box.createVerticalGlue());
         bodySouthInside.add(nameLabel);
-//        bottomLeft.add(Box.createVerticalGlue());
         bodySouthInside.add(sizeLabel);
-//        bottomLeft.add(Box.createVerticalGlue());
         bodySouthInside.add(colourLabel);
-//        bottomLeft.add(Box.createVerticalGlue());
         bodySouthInside.add(itemAvailableLabel);
-
-//        bottomDown.add(addToCartBtn);
         footerPanel.add(addToCartBtn);
     }
 

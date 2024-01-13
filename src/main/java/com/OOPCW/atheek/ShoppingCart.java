@@ -6,12 +6,10 @@ import java.util.List;
 public class ShoppingCart {
 
     List<Product> cart = new ArrayList<>();
-
     int cartCount;
 
     //    Singleton pattern
-
-    public static ShoppingCart shoppingCart = new ShoppingCart();
+    private static ShoppingCart shoppingCart = new ShoppingCart();
 
     private ShoppingCart() {}
 
@@ -31,7 +29,9 @@ public class ShoppingCart {
         cartCount++;
     }
     void remove(){}
-    void calculateTotal(){}
+    void calculateTotal(){
+
+    }
 
     public void clearCart(){
         this.cart.clear();

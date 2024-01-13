@@ -39,6 +39,8 @@ public class WestminsterShoppingManager implements ShoppingManager {
 
     }
 
+    /**This method delete products based on the Product ID
+     * Provided by user input*/
     @Override
     public void deleteProduct(String id) {
         if (!productList.isEmpty()) {
@@ -62,6 +64,7 @@ public class WestminsterShoppingManager implements ShoppingManager {
         }
     }
 
+    /**Prints all products in the product list*/
     @Override
     public void printAllProducts() {
         if (!productList.isEmpty()) {
@@ -78,6 +81,7 @@ public class WestminsterShoppingManager implements ShoppingManager {
             System.out.println("List is empty");
         }
     }
+
 
     @Override
     public void saveFile() throws IOException {
@@ -99,6 +103,9 @@ public class WestminsterShoppingManager implements ShoppingManager {
 
     }
 
+
+    /** This method save list of products to the file named
+     * "saved.txt"*/
     @Override
     public void loadFile() throws IOException, ClassNotFoundException {
         FileInputStream fileInStr = new FileInputStream(filename);
@@ -127,6 +134,7 @@ public class WestminsterShoppingManager implements ShoppingManager {
                 '}';
     }
 
+    /**Console menu*/
     public void menu(){
         System.out.println("----- Welcome to Westminster Shopping Centre -----");
         System.out.println("Please select a number below:");
@@ -134,6 +142,7 @@ public class WestminsterShoppingManager implements ShoppingManager {
         System.out.println("2. Delete a product");
         System.out.println("3. Display all the products");
         System.out.println("4. Save the file");
-        System.out.println("5. To exit");
+        System.out.println("5. Start GUI Application");
+        System.out.println("6. To exit");
     }
 }

@@ -2,8 +2,6 @@ package com.OOPCW.atheek;
 
 import javax.swing.*;
 import javax.swing.table.AbstractTableModel;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.List;
 
 public class CartController {
@@ -12,13 +10,12 @@ public class CartController {
     CartView cartView;
     JTable table;
     ShoppingCentreController spCtrl;
-
     CartTableEditor cartTableEditor = new CartTableEditor(cartClass.getCart());
-//    BtnEventHandler handler = new BtnEventHandler();
-
-//    CartCellEditor newcartcell = new CartCellEditor();
 
     WestminsterShoppingManager uowModel = WestminsterShoppingManager.getUowShoppingManager();
+
+    /**Constructor of this class
+     * which shares composition relationship with CartView*/
     public CartController(ShoppingCentreController spCtrl, User testUser){
         cartView = new CartView(this);
         this.table = cartView.table;
@@ -26,37 +23,38 @@ public class CartController {
         this.testUser = testUser;
     }
 
+    /** Make the frame visible here*/
     void cartInit(){
-//        cartView.addLayout();
-//        cartView.addTable();
-//        updateTable();
-//        editCell();
         cartView.setTitle("Westminster Shopping Cart");
-        cartView.setSize(800,800);
+        cartView.setSize(1024,800);
+        cartView.setResizable(false);
         cartView.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         cartView.setVisible(true);
-//        addListeners();
 
     }
 
-//    void addListeners(){
-//        purchaseBtnEvent();
-//    }
-//
-//    void purchaseBtnEvent(){
-//        cartView.purchaseBtn.addActionListener(e -> {
-//
-//        });
-//    }
 
+    /**This code will get called by purchase btn in the cartView
+     * when button clicked.
+     * this will add products to the purchases cart and reduces the value of productList,
+     * Clear the shopping cart, to make it visible as well as fire the table changed method to refresh the table
+     * */
     void purchaseConfirmed(){
         for (Product product: cartClass.getCart()){
+            product.purchasedQuantity = product.getItemsInCart();
+            product.copyOfItemsCount -= product.getItemsInCart();
             testUser.getHistory().addPurchasedProducts(product);
         }
+        for (Product product : cartClass.getCart()) {
+            cartTableEditor.setValueAt("None",cartClass.getCart().indexOf(product),1 );
+        }
         cartClass.clearCart();
+        cartTableEditor.fireTableDataChanged();
         cartLabelUpdate();
     }
 
+
+    /**All in one method to update the labels in shopping cart*/
     public void cartLabelUpdate(){
         double total = updateTotalValue();
         double discountValue10 = tenPercentDiscount(total);
@@ -67,6 +65,8 @@ public class CartController {
         cartView.discount20.setText(Double.toString(discountValue20));
         cartView.finalTotNum.setText(Double.toString(finalTotal));
     }
+
+    /** Updating total value method*/
     public double updateTotalValue(){
         double tot = 0;
         for (int i = 0; i < table.getModel().getRowCount(); i++){
@@ -75,6 +75,7 @@ public class CartController {
         return tot;
     }
 
+    /** 10% discount calculating method*/
     public double tenPercentDiscount(double total){
         if (testUser.getHistory().getPurchaseCount() < 1){
             return total * 0.1;
@@ -82,6 +83,7 @@ public class CartController {
         return 0;
     }
 
+    /** 20% discount calculation method*/
     public double twentyPercentDiscount(double total){
         int electronicCount = 0;
         int clothingCount = 0;
@@ -93,11 +95,10 @@ public class CartController {
             }
         }
         return electronicCount >= 3 || clothingCount >= 3 ? total * 0.1 : 0;
-
     }
 
+    /** Inner class abstractModel this will operate and make changes in the Jtable  */
     public class CartTableEditor extends AbstractTableModel{
-
         List<Product> cartOfProducts;
 
         public CartTableEditor(List<Product> cartOfProducts) {
@@ -141,6 +142,7 @@ public class CartController {
 
         @Override
         public boolean isCellEditable(int rowIndex, int columnIndex) {
+            // only the second cell of the table can be edited
             return columnIndex == 1;
         }
 
@@ -170,114 +172,23 @@ public class CartController {
 
         @Override
         public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
-            // Sets edited value so it will get recieved in the unedited state
+            // Sets edited value so it will get received in the unedited state
             if (aValue instanceof Number){
                 if (columnIndex == 1){
                     cartOfProducts.get(rowIndex).setItemsInCart((int)aValue);
                 }
                 fireTableCellUpdated(rowIndex,2);
-                cartLabelUpdate();
-                //sending appropriate object and the value that is changed by input
-                //So that shopping label under the table get updated
-                spCtrl.updateLabels(cartOfProducts.get(rowIndex));
-                cartView.purchaseBtn.setEnabled(cartClass.cartCount > 0);
+
+            }else{
+                fireTableCellUpdated(rowIndex,1);
+                cartOfProducts.get(rowIndex).setItemsInCart(0);
             }
+            cartLabelUpdate();
+            //sending appropriate object and the value that is changed by input
+            //So that shopping label under the table get updated
+            spCtrl.updateLabels(cartOfProducts.get(rowIndex));
+            cartView.purchaseBtn.setEnabled(cartClass.cartCount > 0);
         }
-
-
     }
-
-
-
-
-
-//    public class CartCellEditor extends DefaultCellEditor{
-//
-//        JSpinner inputSpinner;
-//
-////        private JTable table;
-////        private int row;
-////
-////        private Product item;
-//
-//        public CartCellEditor() {
-//            super(new JCheckBox());
-//            inputSpinner = new JSpinner();
-//            SpinnerNumberModel numberModel = (SpinnerNumberModel) inputSpinner.getModel();
-//            numberModel.setMinimum(1);
-//
-//            model = (DefaultTableModel) cartView.table.getModel();
-//            table = cartView.table;
-//
-//            cartView.table.getSelectionModel().addListSelectionListener(e -> {
-//
-//
-//                if (!e.getValueIsAdjusting()){
-//                    int row = table.getSelectedRow();
-//                    double price = Double.parseDouble(model.getValueAt(row,2).toString());
-//                    String CellValue = model.getValueAt(row,0).toString();
-//                    int c = 0;
-//                    String prId;
-//                    for (int i = 0; i <= 10;i++){
-//                        if(CellValue.charAt(c) == ' '){
-//                            prId = CellValue.substring(0,c);
-//                            for (Product product: cartClass.cart){
-//                                if (product.productID.equals(prId)){
-//                                    int maxValue = product.getNoOfItems();
-//                                    numberModel.setMaximum(maxValue);
-//                                }
-//                            }
-//                            break;
-//                        }
-//                        c++;
-//                    }
-//
-//                    inputSpinner.addChangeListener((ChangeEvent event) -> {
-////                        int spinnerQuantity = Integer.parseInt(inputSpinner.getValue().toString());
-//                        int qty = Integer.parseInt(model.getValueAt(row,1).toString());
-//                        table.setValueAt(qty *  price,row,2);
-////                        double sum = 0;
-////                        for (int i = 0; i < model.getRowCount(); i++){
-////                            sum += Double.parseDouble(model.getValueAt(i,2).toString());
-////                        }
-////                        cartView.totalNum.setText(Double.toString(sum));
-//                        calculateTotal();
-//                    });
-//
-//                }
-//
-//
-//
-//
-//            });
-//
-//
-//            JSpinner.NumberEditor editor = (JSpinner.NumberEditor)inputSpinner.getEditor();
-//            DefaultFormatter formatter = (DefaultFormatter)editor.getTextField().getFormatter();
-//            formatter.setCommitsOnValidEdit(true);
-//        }
-//
-//        /**
-//         * This method works When cell begin editing
-//         * Override this method to get JSpinner instead of default JCheckbox component*/
-//        @Override
-//        public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column) {
-//             super.getTableCellEditorComponent(table, value, isSelected, row, column);
-////             this.table = table;
-////             this.row = row;
-////             this.item = (Product) table.getValueAt(row,0);
-//             int quantity = Integer.parseInt(value.toString());
-//             inputSpinner.setValue(quantity);
-//             return inputSpinner;
-//        }
-//
-//        /**This method work when the cell has stopped editing
-//         * So by returning the input spinner value will modify the value of the cell*/
-//        @Override
-//        public Object getCellEditorValue() {
-//            return inputSpinner.getValue();
-//        }
-//
-//    }
 
 }

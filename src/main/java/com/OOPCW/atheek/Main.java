@@ -1,7 +1,5 @@
 package com.OOPCW.atheek;
 
-import javax.swing.*;
-import java.awt.*;
 import java.io.IOException;
 import java.util.Scanner;
 import java.util.regex.Pattern;
@@ -9,26 +7,17 @@ import java.util.regex.Pattern;
 
 public class Main {
     static Scanner sc = new Scanner(System.in);
-    static WestminsterShoppingManager uowShoppingManager = WestminsterShoppingManager.getUowShoppingManager(); //Singleton pattern usage
+    static WestminsterShoppingManager uowShoppingManager = WestminsterShoppingManager.getUowShoppingManager();
+    //Singleton pattern usage
 
     public static void main(String[] args)  {
-
-//        ShoppingCentreView frame = new ShoppingCentreView(uowShoppingManager);
-//        frame.setTitle("Westminster Shopping Centre");
-//        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-////        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-////        frame.setSize(screenSize.width,screenSize.height);
-//        frame.setSize(800,800);
-//        frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
-//        frame.setResizable(true);
-//        frame.setVisible(true);
-
 
         try {
             uowShoppingManager.loadFile(); //Load products from a file that previously saved.
         } catch (Exception ignored) {}     // Exception will get ignored whether it is (IOException or ClassNotFoundException)
 
-        GUIController guiController = new GUIController();
+        GUIController guiController = new GUIController(); //Initializing The GUI
+
         menuLabel:
             while(true){
                 uowShoppingManager.menu();
@@ -58,24 +47,26 @@ public class Main {
                         }
                         break;
                     case 5:
+                        guiController.start();
+                        break;
+                    case 6:
                         System.out.println(uowShoppingManager.productCount);
                         break menuLabel;
-                    case 6:
-
-                        guiController.start();
                     default:
                         System.out.println("Invalid Input");
                         break;
                 }
                 int extChoice = validateIntegers("Press any number to navigate main menu Or enter '999' to exit : ",1,1000);
                 if (extChoice == 999){
-                    uowShoppingManager.printAllProducts();
+                    System.out.println("Closing...");
                     break;
                 }
             }
     }
 
+// ------------------------------------CONSOLE OPERATIONS--------------------------------------------
 
+    /** Adding clothing to the product list take place in this method*/
     public static Clothing addClothing(){
         String productID = stringValidation("Enter Product ID : ",5,10);
         String productName = stringValidation("Enter Product name : ",1,50);
@@ -88,7 +79,7 @@ public class Main {
         return new Clothing(productID,productName,noOfItems,price,size,color);
     }
 
-
+    /** Adding Electronics to the product list take place in this method*/
     public static Electronics addElectronics(){
         String productID = stringValidation("Enter Product ID : ",5,10);
         String productName = stringValidation("Enter Product name : ",1,50);
@@ -101,14 +92,16 @@ public class Main {
         return new Electronics(productID,productName,noOfItems,price,brand,warranty);
     }
 
-
+    /** Deleting product take place in this method*/
     public static String deleteOption(){
         return stringValidation("Enter the desired product ID that you want to delete : ",5,10);
 
     }
 
+// -------------------------------VALIDATORS------------------------------------------
 
-    /** Input Validators including (int, double, String)*/
+    /** Input Integer Validators including (int, double, String)
+     * @param startRange,endRange will define the length range of the input */
     public static int validateIntegers(String message, int startRange ,int endRange){
         while (true) {
             System.out.print(message);
@@ -126,7 +119,8 @@ public class Main {
         }
     }
 
-
+    /** Input Double Validators including (int, double, String)
+     * @param startRange,endRange will define the length range of the input */
     public static double validateDoubles(String message, int startRange,int endRange){
         while (true) {
             System.out.print(message);
@@ -145,6 +139,8 @@ public class Main {
     }
 
 
+    /** Input String Validators including (int, double, String)
+     * @param startRange,endRange will define the length range of the input */
     private static String stringValidation(String message, int startRange,int endRange){
         Scanner sc = new Scanner(System.in);
         while (true){
